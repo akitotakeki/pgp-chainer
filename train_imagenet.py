@@ -99,8 +99,7 @@ if __name__ == '__main__':
         img = color_jitter(img)
         img = T.pca_lighting(img, 0.1)
 
-        for i in range(3):
-            img[i] = (img[i] - mean[i]) / std[i]
+        img = (img - mean[:, None, None]) / std[:, None, None]
 
         img = T.random_flip(img, x_random=True)
         return img, label
@@ -116,8 +115,7 @@ if __name__ == '__main__':
         img = T.scale(img, 256, interpolation=PIL.Image.BICUBIC)
         img = T.center_crop(img, (224, 224))
 
-        for i in range(3):
-            img[i] = (img[i] - mean[i]) / std[i]
+        img = (img - mean[:, None, None]) / std[:, None, None]
 
         return img, label
 
