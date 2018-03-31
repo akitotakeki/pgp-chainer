@@ -7,7 +7,10 @@ This repository contains the code for the paper Parallel Grid Pooling.
 - ChainerCV 0.8.0
 
 ## Training
-    $ python train.py --dataset [cifar10,cifar100,svhn] --model PreResNet164 --gpus 0
+To train PreResNet-164 on CIFAR-10 dataset with single-GPU:
+
+    $ python train.py --dataset cifar10 --model PreResNet164 --gpus 0
+To train ResNet-50 on ImageNet dataset with multi-GPU:
 
     $ python train_imagenet.py --model ResNet50_fb --gpus 0,1,2,3,4,5,6,7
 
