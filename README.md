@@ -1,5 +1,5 @@
-# Parallel Grid Pooling
-This repository contains the code for the paper Parallel Grid Pooling. 
+# Parallel Grid Pooling for Data Augmentation
+This repository contains the code for the paper Parallel Grid Pooling for Data Augmentation. 
 
 ## Requirements
 - Python 3.5+
