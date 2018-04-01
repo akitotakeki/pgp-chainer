@@ -3,9 +3,9 @@ This repository contains the code for the paper Parallel Grid Pooling for Data A
 
 ## Requirements
 - Python 3.5+
-- Chainer 4.0.0b2
-- CuPy 4.0.0b2
-- ChainerCV 0.8.0
+- Chainer 4.0.0b2+
+- CuPy 4.0.0b2+
+- ChainerCV 0.8.0+
 
 ## Training
 To train PreResNet-164 on CIFAR-10 dataset with single-GPU:
@@ -16,6 +16,7 @@ To train ResNet-50 on ImageNet dataset with multi-GPU:
     $ python train_imagenet.py --model ResNet50_fb --gpus 0,1,2,3,4,5,6,7
 
 ## Results on CIFAR-10
+Test errors (%)
 
 | Network | #Params | Base | DConv | PGP |
 | :------ |--------:| ---: | ----: | --: |
@@ -27,7 +28,7 @@ To train ResNet-50 on ImageNet dataset with multi-GPU:
 | DenseNet-BC-100 (k=12) | 0.8M | 4.60 | 4.35 | **4.11** |
 
 ### Weight Transfer
-Test-time data augmentation
+Test errors (%) (Test-time data augmentation)
 
 | Network | #Params | Base | PGP |
 | :------ |--------:| ---: | --: |
@@ -38,7 +39,7 @@ Test-time data augmentation
 | PyramidNet-164 (α=28)  | 1.7M | 3.91 | **3.82** |
 | DenseNet-BC-100 (k=12) | 0.8M | 4.60 | **4.53** |
 
-Training-time data augmentation
+Test errors (%) (Training-time data augmentation)
 
 | Network | #Params | Base | DConv | PGP |
 | :------ |--------:| ---: | ----: | --: |
@@ -50,7 +51,7 @@ Training-time data augmentation
 | DenseNet-BC-100 (k=12) | 0.8M | 4.60 | 7.03 | **4.36** |
 
 ## Results on ImageNet and Pretrained Models
-The error rates shown are 224x224 1-crop test errors.
+The error rates (%) shown are 224x224 1-crop test errors.
 
 | Network | #Params | Top-1 error | Top-5 error | Model |
 | :------ |--------:| ----------: | ----------: | ----- |
