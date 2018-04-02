@@ -69,3 +69,9 @@ The error rates (%) shown are 224x224 1-crop test errors.
 | ResNet-101  (Train: PGP,   Test: Base)   | 44.5M | 21.80       | 5.95        |-|
 
 ## Citation
+    @article{Takeki18Parallel,
+        title = {Parallel Grid Pooling for Data Augmentation},
+        author = {Takeki, Akito and Ikami, Daiki and Irie, Go and Aizawa, Kiyoharu},
+        journal = {arXiv preprint arXiv:1803.11370},
+        year = 2018,
+    }
