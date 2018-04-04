@@ -24,7 +24,7 @@ Test errors (%)
 | All-CNN                | 1.4M | 8.42 | 8.68 | **7.17** |
 | WideResNet-28-10       | 36.5M | 3.44 | 3.88 | **3.13** |
 | ResNeXt-29 (8x64d)     | 34.4M | 3.86 | 3.87 | **3.22** |
-| PyramidNet-164 (α=28)  | 1.7M | 3.91 | 3.72 | **3.38** |
+| PyramidNet-164 (α=48)  | 1.7M | 3.91 | 3.72 | **3.38** |
 | DenseNet-BC-100 (k=12) | 0.8M | 4.60 | 4.35 | **4.11** |
 
 ### Weight Transfer
@@ -36,7 +36,7 @@ Test errors (%) (Test-time data augmentation)
 | All-CNN                | 1.4M | **8.42** | 9.03 |
 | WideResNet-28-10       | 36.5M | 3.44 | **3.39** |
 | ResNeXt-29 (8x64d)     | 34.4M | **3.86** | 4.01 |
-| PyramidNet-164 (α=28)  | 1.7M | 3.91 | **3.82** |
+| PyramidNet-164 (α=48)  | 1.7M | 3.91 | **3.82** |
 | DenseNet-BC-100 (k=12) | 0.8M | 4.60 | **4.53** |
 
 Test errors (%) (Training-time data augmentation)
@@ -47,7 +47,7 @@ Test errors (%) (Training-time data augmentation)
 | All-CNN                | 1.4M | 8.42 | 38.77 | **7.30** |
 | WideResNet-28-10       | 36.5M | 3.44 | 7.90 | **3.30** |
 | ResNeXt-29 (8x64d)     | 34.4M | 3.86 | 16.91 | **3.36** |
-| PyramidNet-164 (α=28)  | 1.7M | 3.91 | 6.82 | **3.55** |
+| PyramidNet-164 (α=48)  | 1.7M | 3.91 | 6.82 | **3.55** |
 | DenseNet-BC-100 (k=12) | 0.8M | 4.60 | 7.03 | **4.36** |
 
 ## Results on ImageNet and Pretrained Models
