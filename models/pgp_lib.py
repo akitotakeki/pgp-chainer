@@ -1,6 +1,5 @@
 import numpy as np
 import chainer
-import chainer.functions as F
 
 
 def pgp(x, r=2):
@@ -28,5 +27,5 @@ def zero_pads(x, pad, where):
     sizes = list(x.data.shape)
     sizes[where] = pad
     xp = chainer.cuda.get_array_module(x)
-    pad_mat = chainer.Variable(chainer.cuda.to_gpu(xp.zeros(sizes, dtype=np.float32), device=chainer.cuda.get_device_from_array(x.data)))
-    return F.concat((pad_mat, x), axis=where)
+    pad_mat = xp.zeros(sizes, dtype=np.float32)
+    return xp.concatenate((pad_mat, x), axis=where)
