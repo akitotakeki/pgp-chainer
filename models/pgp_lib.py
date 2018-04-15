@@ -32,7 +32,7 @@ class PGP(function_node.FunctionNode):
             X, (bsize, c, a // self.r, self.r, b // self.r, self.r))
         X = xp.transpose(X, (3, 5, 0, 1, 2, 4))
         X = xp.reshape(
-            X, (self.r ** 2 * bsize, c, a // self.r, b // self.r))
+            X, (self.r ** 2 * bsize, c, a // self.r, b // self.r)) * 4
         return X,
 
     def backward(self, indexes, grad_outputs):
@@ -129,5 +129,5 @@ def zero_pads(x, pad, where):
     sizes = list(x.shape)
     sizes[where] = pad
     xp = cuda.get_array_module(x)
-    pad_mat = xp.zeros(sizes, dtype=x.float32)
+    pad_mat = xp.zeros(sizes, dtype=xp.float32)
     return xp.concatenate((pad_mat, x), axis=where)
