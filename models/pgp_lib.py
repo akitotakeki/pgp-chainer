@@ -46,6 +46,21 @@ class PGP(function_node.FunctionNode):
 
 
 def pgp(X, r):
+    """Parallel grid pooling function.
+
+    Args:
+        X (:class:`~chainer.Variable` or :class:`numpy.ndarray` or \
+        :class:`cupy.ndarray`):
+            Variable holding a 4d array of shape
+            ``(batch * r * r, channel, dim1, dim2)``.
+        r (int): the downscaling factor.
+
+    Returns:
+        ~chainer.Variable:
+            A variable holding the downscaled layer array from subpixel array
+            sampling. The shape is ``(batch * r * r, channel, dim1, dim2)``
+
+    """
     return PGP(r).apply((X,))[0]
 
 
@@ -91,6 +106,22 @@ class PGPInverse(function_node.FunctionNode):
 
 
 def pgp_inv(X, r):
+    """The inverse of parallel grid pooling function.
+
+    Args:
+        X (:class:`~chainer.Variable` or :class:`numpy.ndarray` or \
+        :class:`cupy.ndarray`):
+            Variable holding a 4d array of shape
+            ``(batch * r * r, channel, dim1, dim2)``.
+        r (int): the upscaling factor.
+
+    Returns:
+        ~chainer.Variable:
+            A variable holding the upscaled array from
+            interspersed layers. The shape is
+            ``(batch, channel, dim1 * r, dim2 * r)``.
+
+    """
     return PGPInverse(r).apply((X,))[0]
 
 
