@@ -62,8 +62,8 @@ class BottleneckA(chainer.link.Chain):
             the convolutional layers.
     """
 
-    def __init__(self, in_channels, out_channels, cardinality, base_width, widen_factor,
-                 stride=2, initialW=None):
+    def __init__(self, in_channels, out_channels, cardinality, base_width,
+                 widen_factor, stride=2, initialW=None):
         super(BottleneckA, self).__init__()
 
         self.stride = stride
@@ -91,8 +91,8 @@ class BottleneckA(chainer.link.Chain):
         h1 = F.relu(self.bn1(self.conv1(x)))
         h1 = F.relu(self.bn2(self.conv2(h1)))
         if self.stride == 2:
-            h1 = self.bn3(self.conv3(lambda x: pgp(h1, 2)))
-            h2 = self.bn4(self.conv4(lambda x: pgp(x, 2)))
+            h1 = self.bn3(self.conv3(pgp(h1, 2)))
+            h2 = self.bn4(self.conv4(pgp(x, 2)))
             pass
         else:
             h1 = self.bn3(self.conv3(h1))
@@ -111,7 +111,8 @@ class BottleneckB(chainer.link.Chain):
             the convolutional layers.
     """
 
-    def __init__(self, in_channels, cardinality, base_width, widen_factor, initialW=None):
+    def __init__(self, in_channels, cardinality, base_width, widen_factor,
+                 initialW=None):
         super(BottleneckB, self).__init__()
         width_ratio = in_channels / (widen_factor * 64)
         D = cardinality * int(base_width * width_ratio)
