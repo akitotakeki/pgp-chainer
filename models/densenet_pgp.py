@@ -3,8 +3,8 @@ import collections
 import chainer
 import chainer.functions as F
 import chainer.links as L
-from .preresnet_s3 import batch_expansion
 from .densenet import DenseBlock
+from .pgp_lib import pgp
 
 
 class TransitionLayer(chainer.Chain):
@@ -17,7 +17,7 @@ class TransitionLayer(chainer.Chain):
 
     def __call__(self, x):
         x = self.conv(F.relu(self.bn(x)))
-        x = batch_expansion(F.average_pooling_2d(x, 2, 1, 1)[:, :, 1:, 1:], 2, 4)
+        x = pgp(F.average_pooling_2d(x, 2, 1, 1)[:, :, 1:, 1:], 2)
         return x
 
 
