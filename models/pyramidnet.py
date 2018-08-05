@@ -79,14 +79,14 @@ class PyramidBottleneck(chainer.Chain):
         del h_channel
         if self.stride == 2:
             return h + F.concat((
-                F.average_pooling_2d(x, 2, 2), chainer.Variable(chainer.cuda.to_gpu(
+                F.average_pooling_2d(x, 2, 2), chainer.Variable(
                     self.xp.zeros((batch, self.zero_ch, h_height, h_width),
-                                  dtype=np.float32), device=chainer.cuda.get_device_from_array(x.data)))))
+                                  dtype=np.float32))))
         else:
             return h + F.concat((
-                x, chainer.Variable(chainer.cuda.to_gpu(
+                x, chainer.Variable(
                     self.xp.zeros((batch, self.zero_ch, h_height, h_width),
-                                  dtype=np.float32), device=chainer.cuda.get_device_from_array(x.data)))))
+                                  dtype=np.float32))))
 
 
 class PyramidNet(chainer.Chain):
