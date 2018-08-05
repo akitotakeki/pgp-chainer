@@ -4,7 +4,6 @@ import chainer
 import chainer.functions as F
 from chainer.initializers import normal
 import chainer.links as L
-import chainer.links.model.vision.resnet as R
 from .preresnet import PreBuildingBlock
 from .pgp_lib import pgp
 
@@ -37,7 +36,7 @@ class PreResNet_PGP(chainer.Chain):
             ('res3', [self.res3]),
             ('expand4', [lambda x: pgp(x, 2)]),
             ('res4', [self.res4]),
-            ('pool4', [self.bn4, F.relu, R._global_average_pooling_2d]),
+            ('pool4', [self.bn4, F.relu, lambda x: F.average(x, axis=(2, 3))]),
             ('fc5', [self.fc5]),
         ])
 

@@ -3,7 +3,6 @@ import collections
 import chainer
 import chainer.functions as F
 import chainer.links as L
-import chainer.links.model.vision.resnet as R
 from .preresnet_s3 import batch_expansion
 from .densenet import DenseBlock
 
@@ -57,8 +56,7 @@ class DenseNetBC_PGP(chainer.Chain):
             ('block3', [self.block1]),
             ('trans3', [self.trans1]),
             ('block4', [self.block2]),
-            ('pool4', [self.fc_bn, F.relu,
-                       R._global_average_pooling_2d]),
+            ('pool4', [self.fc_bn, F.relu, lambda x: F.average(x, axis=(2, 3))]),
             ('fc5', [self.fc]),
         ])
 

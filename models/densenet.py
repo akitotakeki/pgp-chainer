@@ -5,7 +5,6 @@ import chainer
 from chainer import cuda
 import chainer.functions as F
 import chainer.links as L
-import chainer.links.model.vision.resnet as R
 try:
     import cupy
     fuse = cupy.fuse
@@ -228,7 +227,7 @@ class DenseNetBC(chainer.Chain):
             ('block3', [self.block1]),
             ('trans3', [self.trans1]),
             ('block4', [self.block2]),
-            ('pool4', [self.fc_bn, F.relu, R._global_average_pooling_2d]),
+            ('pool4', [self.fc_bn, F.relu, lambda x: F.average(x, axis=(2, 3))]),
             ('fc5', [self.fc]),
         ])
 

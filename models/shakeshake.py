@@ -8,7 +8,6 @@ from chainer import configuration
 import chainer.functions as F
 import chainer.links as L
 from chainer.initializers import normal
-import chainer.links.model.vision.resnet as R
 import collections
 
 
@@ -174,7 +173,7 @@ class ShakeShake(chainer.Chain):
             ('res2', [self.res2]),
             ('res3', [self.res3]),
             ('res4', [self.res4]),
-            ('pool4', [F.relu, R._global_average_pooling_2d]),
+            ('pool4', [F.relu, lambda x: F.average(x, axis=(2, 3))]),
             ('fc5', [self.fc5]),
         ])
 

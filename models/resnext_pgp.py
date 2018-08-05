@@ -6,7 +6,6 @@ import chainer.functions as F
 import chainer.links as L
 from chainer.initializers import normal
 import collections
-import chainer.links.model.vision.resnet as R
 from .pgp_lib import pgp
 
 
@@ -164,7 +163,7 @@ class ResNeXt_PGP(chainer.Chain):
             ('res2', [self.res2]),
             ('res3', [self.res3]),
             ('res4', [self.res4]),
-            ('pool4', [R._global_average_pooling_2d]),
+            ('pool4', [lambda x: F.average(x, axis=(2, 3))]),
             ('fc5', [self.fc5]),
         ])
 

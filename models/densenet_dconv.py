@@ -3,7 +3,6 @@ import collections
 import chainer
 import chainer.functions as F
 import chainer.links as L
-import chainer.links.model.vision.resnet as R
 from .densenet import DenseBlock
 from .pgp_lib import pgp, pgp_inv
 
@@ -63,8 +62,7 @@ class DenseNetBC_DConv(chainer.Chain):
             ('expand3', [lambda x: pgp(x, 2)]),
             ('block4', [self.block2]),
             ('squeeze4', [lambda x: pgp_inv(x, 4)]),
-            ('pool4', [self.fc_bn, F.relu,
-                       R._global_average_pooling_2d]),
+            ('pool4', [self.fc_bn, F.relu, lambda x: F.average(x, axis=(2, 3))]),
             ('fc5', [self.fc]),
         ])
 

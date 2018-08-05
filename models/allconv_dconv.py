@@ -5,7 +5,6 @@ import chainer
 import chainer.functions as F
 import chainer.links as L
 from chainer.initializers import normal
-import chainer.links.model.vision.resnet as R
 import collections
 from chainercv.links import Conv2DBNActiv
 from .pgp_lib import pgp, pgp_inv
@@ -37,7 +36,7 @@ class AllConv_DConv(chainer.Chain):
                        self.conv2_3, F.dropout]),
             ('conv3', [self.conv3_1, self.conv3_2, self.conv3_3]),
             ('squeeze3', [lambda x: pgp_inv(x, 4)]),
-            ('pool3', [R._global_average_pooling_2d]),
+            ('pool3', [lambda x: F.average(x, axis=(2, 3))]),
             ('fc', [self.fc]),
         ])
 

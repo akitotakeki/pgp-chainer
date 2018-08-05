@@ -146,8 +146,7 @@ class PreResNet(chainer.Chain):
             ('res2', [self.res2]),
             ('res3', [self.res3]),
             ('res4', [self.res4]),
-            ('pool4', [self.bn4, F.relu,
-                       lambda x: F.average_pooling_2d(x, 8, stride=1)]),
+            ('pool4', [self.bn4, F.relu, lambda x: F.average(x, axis=(2, 3))]),
             ('fc5', [self.fc5]),
         ])
 
