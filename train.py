@@ -79,13 +79,13 @@ if __name__ == '__main__':
     if args.dataset == 'cifar10':
         train, test = chainer.datasets.get_cifar10()
         args.nclasses = 10
-        mean = np.array((0.491401, 0.4821591, 0.44653094))
-        std = np.array((0.2470328, 0.24348424, 0.26158753))
+        mean = np.array((0.491401, 0.4821591, 0.44653094), dtype=np.float32)
+        std = np.array((0.2470328, 0.24348424, 0.26158753), dtype=np.float32)
     elif args.dataset == 'cifar100':
         train, test = chainer.datasets.get_cifar100()
         args.nclasses = 100
-        mean = np.array((0.5070759, 0.48655054, 0.44091946))
-        std = np.array((0.267334, 0.25643876, 0.2761503))
+        mean = np.array((0.5070759, 0.48655054, 0.44091946), dtype=np.float32)
+        std = np.array((0.267334, 0.25643876, 0.2761503), dtype=np.float32)
     elif args.dataset == 'svhn':
         def get_svhn():
             train_dict = sio.loadmat('../SVHN/train_32x32.mat')
@@ -107,8 +107,8 @@ if __name__ == '__main__':
             return train, test
 
         train, test = get_svhn()
-        mean = np.array((109.882324, 109.71174, 113.8192))
-        std = np.array((50.114918, 50.572132, 50.852173))
+        mean = np.array((109.882324, 109.71174, 113.8192), dtype=np.float32)
+        std = np.array((50.114918, 50.572132, 50.852173), dtype=np.float32)
 
     # Preprocessing
     # images = convert.concat_examples(train)[0]
