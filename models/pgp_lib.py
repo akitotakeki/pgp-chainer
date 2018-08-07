@@ -32,7 +32,7 @@ class PGP(function_node.FunctionNode):
             X, (bsize, c, a // self.r, self.r, b // self.r, self.r))
         X = xp.transpose(X, (3, 5, 0, 1, 2, 4))
         X = xp.reshape(
-            X, (self.r ** 2 * bsize, c, a // self.r, b // self.r)) * 4
+            X, (self.r ** 2 * bsize, c, a // self.r, b // self.r))
         return X,
 
     def backward(self, indexes, grad_outputs):
