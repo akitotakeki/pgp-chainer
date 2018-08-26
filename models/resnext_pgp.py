@@ -75,7 +75,7 @@ class BottleneckA(chainer.link.Chain):
             self.bn1 = L.BatchNormalization(D)
             self.conv2 = L.Convolution2D(
                 D, D, 3, 1, 1,
-                initialW=initialW, nobias=True, group=cardinality)
+                initialW=initialW, nobias=True, groups=cardinality)
             self.bn2 = L.BatchNormalization(D)
             self.conv3 = L.Convolution2D(
                 D, out_channels, 1, 1, 0, initialW=initialW,
@@ -122,7 +122,7 @@ class BottleneckB(chainer.link.Chain):
             self.bn1 = L.BatchNormalization(D)
             self.conv2 = L.Convolution2D(
                 D, D, 3, 1, 1, initialW=initialW,
-                nobias=True, group=cardinality)
+                nobias=True, groups=cardinality)
             self.bn2 = L.BatchNormalization(D)
             self.conv3 = L.Convolution2D(
                 D, in_channels, 1, 1, 0, initialW=initialW,
