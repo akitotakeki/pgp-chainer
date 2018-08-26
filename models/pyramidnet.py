@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import numpy as np
 import chainer
 import chainer.functions as F
 import chainer.links as L
@@ -76,16 +75,15 @@ class PyramidBottleneck(chainer.Chain):
         h = self.bn4(h)
         batch, h_channel, h_height, h_width = h.shape
         del h_channel
+        with chainer.cuda.get_device_from_array(x.data):
+            zero = chainer.Variable(
+                self.xp.zeros((batch, self.zero_ch, h_height, h_width),
+                              dtype=self.xp.float32))
         if self.stride == 2:
             return h + F.concat((
-                F.average_pooling_2d(x, 2, 2), chainer.Variable(
-                    self.xp.zeros((batch, self.zero_ch, h_height, h_width),
-                                  dtype=np.float32))))
+                F.average_pooling_2d(x, 2, 2), zero))
         else:
-            return h + F.concat((
-                x, chainer.Variable(
-                    self.xp.zeros((batch, self.zero_ch, h_height, h_width),
-                                  dtype=np.float32))))
+            return h + F.concat((x, zero))
 
 
 class PyramidNet(chainer.Chain):

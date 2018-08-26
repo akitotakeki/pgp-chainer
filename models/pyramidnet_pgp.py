@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import numpy as np
 import chainer
 import chainer.functions as F
 import chainer.links as L
@@ -81,17 +80,16 @@ class PyramidBottleneck(chainer.Chain):
         h = self.bn4(h)
         batch, h_channel, h_height, h_width = h.shape
         del h_channel
+        with chainer.cuda.get_device_from_array(x.data):
+            zero = chainer.Variable(
+                self.xp.zeros((batch, self.zero_ch, h_height, h_width),
+                              dtype=self.xp.float32))
         if self.stride == 2:
             h0 = F.concat((
-                pgp(F.average_pooling_2d(x, 2, 1, 1)[:, :, 1:, 1:], 2), chainer.Variable(
-                    self.xp.zeros((batch, self.zero_ch, h_height, h_width),
-                                  dtype=np.float32))))
+                pgp(F.average_pooling_2d(x, 2, 1, 1)[:, :, 1:, 1:], 2), zero))
             return h + h0
         else:
-            return h + F.concat((
-                x, chainer.Variable(
-                    self.xp.zeros((batch, self.zero_ch, h_height, h_width),
-                                  dtype=np.float32))))
+            return h + F.concat((x, zero))
 
 
 class PyramidNet_PGP(chainer.Chain):
