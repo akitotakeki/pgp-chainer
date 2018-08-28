@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import scipy.io as sio
 import os
 import sys
 import argparse
@@ -87,28 +86,11 @@ if __name__ == '__main__':
         mean = np.array((0.5070759, 0.48655054, 0.44091946), dtype=np.float32)
         std = np.array((0.267334, 0.25643876, 0.2761503), dtype=np.float32)
     elif args.dataset == 'svhn':
-        def get_svhn():
-            train_dict = sio.loadmat('../SVHN/train_32x32.mat')
-            extra_dict = sio.loadmat('../SVHN/extra_32x32.mat')
-            test_dict = sio.loadmat('../SVHN/test_32x32.mat')
-
-            train_dict['y'][train_dict['y'] == 10] = 0
-            extra_dict['y'][extra_dict['y'] == 10] = 0
-            test_dict['y'][test_dict['y'] == 10] = 0
-
-            train_all = np.concatenate((np.transpose(train_dict['X'].astype(np.float32), (3, 2, 0, 1)),
-                                        np.transpose(extra_dict['X'].astype(np.float32), (3, 2, 0, 1))))
-            label_all = np.concatenate((train_dict['y'].astype(np.int32).ravel(),
-                                        extra_dict['y'].astype(np.int32).ravel()))
-            train = chainer.datasets.TupleDataset(train_all, label_all)
-            test = chainer.datasets.TupleDataset(np.transpose(
-                test_dict['X'].astype(np.float32), (3, 2, 0, 1)),
-                test_dict['y'].astype(np.int32).ravel())
-            return train, test
-
-        train, test = get_svhn()
-        mean = np.array((109.882324, 109.71174, 113.8192), dtype=np.float32)
-        std = np.array((50.114918, 50.572132, 50.852173), dtype=np.float32)
+        train, test, extra = chainer.datasets.get_svhn(add_extra=True)
+        train = chainer.datasets.ConcatenatedDataset(train, extra)
+        args.nclasses = 10
+        mean = np.array((0.43091714, 0.43023905, 0.44634134), dtype=np.float32)
+        std = np.array((0.19652805, 0.19832036, 0.19942199), dtype=np.float32)
 
     # Preprocessing
     # images = convert.concat_examples(train)[0]
