@@ -6,6 +6,7 @@ This repository contains the code for the paper [Parallel Grid Pooling for Data 
 - Chainer 5.0.0b4+
 - CuPy 5.0.0b4+
 - ChainerCV 0.10.0+
+- ChainerMN 1.3.0+
 
 ## Training
 To train PreResNet-164 on CIFAR-10 dataset with single-GPU:
