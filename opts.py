@@ -19,6 +19,9 @@ from models.resnext_pgp import ResNeXt_PGP
 from models.pyramidnet import PyramidNet
 from models.pyramidnet_dconv import PyramidNet_DConv
 from models.pyramidnet_pgp import PyramidNet_PGP
+from models.densenet_naive import DenseNet
+from models.densenet_naive_dconv import DenseNet_DConv
+from models.densenet_naive_pgp import DenseNet_PGP
 from models.densenet import DenseNetBC
 from models.densenet_dconv import DenseNetBC_DConv
 from models.densenet_pgp import DenseNetBC_PGP
@@ -37,6 +40,15 @@ model_dict = {
         PreResNet_DConv(164, args.nclasses)),
     'PreResNet164_PGP': lambda args: FuseTrainWrapper(
         PreResNet_PGP(164, args.nclasses)),
+    'DenseNetBC100_naive': lambda args: L.Classifier(DenseNet(
+        n_layer=16, growth_rate=12, n_class=args.nclasses,
+        in_ch=24, block=3, bottleneck=True, reduction=0.5)),
+    'DenseNetBC100_naive_DConv': lambda args: L.Classifier(DenseNet_DConv(
+        n_layer=16, growth_rate=12, n_class=args.nclasses,
+        in_ch=24, block=3, bottleneck=True, reduction=0.5)),
+    'DenseNetBC100_naive_PGP': lambda args: FuseTrainWrapper(DenseNet_PGP(
+        n_layer=16, growth_rate=12, n_class=args.nclasses,
+        in_ch=24, block=3, bottleneck=True, reduction=0.5)),
     'DenseNetBC100': lambda args: L.Classifier(
         DenseNetBC(args.nclasses, (16, 16, 16), 12)),
     'DenseNetBC100_DConv': lambda args: L.Classifier(
