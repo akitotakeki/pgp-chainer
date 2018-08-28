@@ -78,13 +78,11 @@ if __name__ == '__main__':
     # Load ImageNet dataset
     train = chainer.datasets.LabeledImageDataset(
         './imagenet_lists/train.txt',
-        root='/srv/datasets/ILSVRC2012/train')
-    #     root='/raid/shared/ILSVRC2012/train')
+        root='/raid/shared/ILSVRC2012/train')
 
     test = chainer.datasets.LabeledImageDataset(
         './imagenet_lists/val.txt',
-        root='/srv/datasets/ILSVRC2012/val')
-    #       root='/raid/shared/ILSVRC2012/val')
+        root='/raid/shared/ILSVRC2012/val')
 
     # Preprocessing
     mean = np.array((0.485, 0.456, 0.406), dtype=np.float32)
