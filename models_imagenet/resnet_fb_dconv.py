@@ -1,7 +1,6 @@
 import chainer
 import chainer.functions as F
 import chainer.links as L
-import chainer.links.model.vision.resnet as R
 from chainer.initializers import normal
 import collections
 from .resnet_fb import BuildingBlock
@@ -43,7 +42,7 @@ class ResNet_fb_DConv(chainer.link.Chain):
             ('expand5', [lambda x: pgp(x, 2)]),
             ('res5', [self.res5]),
             ('squeeze5', [lambda x: pgp_inv(x, 4)]),
-            ('pool5', [R._global_average_pooling_2d]),
+            ('pool5', [lambda x: F.average(x, axis=(2, 3))]),
             ('fc6', [self.fc6]),
         ])
 

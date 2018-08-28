@@ -1,7 +1,6 @@
 import chainer
 import chainer.functions as F
 import chainer.links as L
-import chainer.links.model.vision.resnet as R
 from chainer.initializers import normal
 import collections
 from .resnet_fb import BuildingBlock
@@ -158,11 +157,9 @@ class ResNet_fb_PGP(chainer.link.Chain):
             ('pool1', [lambda x: F.max_pooling_2d(x, ksize=3, stride=2)]),
             ('res2', [self.res2]),
             ('res3', [self.res3]),
-            # ('expand4', [lambda x: _expand(x, 2)]),
             ('res4', [self.res4]),
-            # ('expand5', [lambda x: _expand(x, 2)]),
             ('res5', [self.res5]),
-            ('pool5', [R._global_average_pooling_2d]),
+            ('pool5', [lambda x: F.average(x, axis=(2, 3))]),
             ('fc6', [self.fc6]),
         ])
 
