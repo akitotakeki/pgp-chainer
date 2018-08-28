@@ -6,6 +6,7 @@ import sys
 import argparse
 import PIL
 import numpy as np
+
 import chainer
 from chainer import training
 from chainer.iterators import MultithreadIterator
@@ -15,8 +16,9 @@ from chainer.datasets import split_dataset_n_random
 from chainer.datasets import TransformDataset
 from optimizer import CosineAnnealing
 import chainercv.transforms as T
-from transforms import random_sized_crop, color_jitter
+from transforms import color_jitter, random_sized_crop
 import opts_imagenet
+
 chainer.global_config.autotune = True
 chainer.config.type_check = False
 
@@ -27,7 +29,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--batchsize', type=int, default=256)
     parser.add_argument('--test_batchsize', type=int, default=256)
-    parser.add_argument('--model', type=str, default='ResNet50',
+    parser.add_argument('--model', type=str, default='ResNet50_fb',
                         choices=tuple(models.keys()))
     parser.add_argument('--epoch', '-e', type=int, default=90,
                         help='Number of sweeps over the dataset \
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     parser.add_argument('--trial', type=str, default=None,
                         help='Trial number')
     parser.add_argument('--output', default='result_imagenet')
-    parser.add_argument('--ow', help='Overwrite')
+    parser.add_argument('--ow', help='Overwrite', action='store_true')
     parser.add_argument('--resume')
     parser.add_argument('--nclasses', '-n', type=int, default=1000,
                         help='Number of classes')
@@ -58,7 +60,6 @@ if __name__ == '__main__':
     _dirname.append('lr' + str(args.lr))
     if args.cosine:
         _dirname.append('cos')
-    # _dirname.append('wd' + args.wd)
     if not args.opt == 'momentum':
         _dirname.append(args.opt)
     _dirname.append(str(args.epoch) + 'epoch')
@@ -77,14 +78,17 @@ if __name__ == '__main__':
     # Load ImageNet dataset
     train = chainer.datasets.LabeledImageDataset(
         './imagenet_lists/train.txt',
-        root='/raid/shared/ILSVRC2012/train')
+        root='/srv/datasets/ILSVRC2012/train')
+    #     root='/raid/shared/ILSVRC2012/train')
+
     test = chainer.datasets.LabeledImageDataset(
         './imagenet_lists/val.txt',
-        root='/raid/shared/ILSVRC2012/val')
+        root='/srv/datasets/ILSVRC2012/val')
+    #       root='/raid/shared/ILSVRC2012/val')
 
     # Preprocessing
-    mean = np.array((0.485, 0.456, 0.406))
-    std = np.array((0.229, 0.224, 0.225))
+    mean = np.array((0.485, 0.456, 0.406), dtype=np.float32)
+    std = np.array((0.229, 0.224, 0.225), dtype=np.float32)
 
     def transform(in_data):
         img, label = in_data

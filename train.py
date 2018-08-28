@@ -49,7 +49,7 @@ if __name__ == '__main__':
     parser.add_argument('--trial', type=str, default=None,
                         help='Trial number')
     parser.add_argument('--output', default='result')
-    parser.add_argument('--ow', help='Overwrite')
+    parser.add_argument('--ow', help='Overwrite', action='store_true')
     parser.add_argument('--resume')
     parser.add_argument('--aug', default=True, help='Standard augmentation')
     parser.add_argument('--nclasses', '-n', type=int, default=10,
