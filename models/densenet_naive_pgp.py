@@ -119,6 +119,6 @@ class DenseNet_PGP(chainer.Chain):
         self._layer_names = layers
         x = chainer.Variable(self.xp.asarray(images))
         h = self(x).data
-        h = F.stack(F.split_axis(h, 4 * 4, axis=0))
-        h = F.average(F.softmax(h, axis=2), axis=0)
+        _len, _cls = h.shape
+        h = F.average(F.reshape(h, (16, _len // 16, _cls)), axis=0)
         return chainer.cuda.to_cpu(h.data)

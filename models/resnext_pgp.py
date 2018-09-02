@@ -202,4 +202,7 @@ class ResNeXt_PGP(chainer.Chain):
     def extract(self, images, layers=['fc5']):
         self._layer_names = layers
         x = chainer.Variable(self.xp.asarray(images))
-        return chainer.cuda.to_cpu(self(x).data)
+        h = self(x).data
+        _len, _cls = h.shape
+        h = F.average(F.reshape(h, (16, _len // 16, _cls)), axis=0)
+        return chainer.cuda.to_cpu(h.data)
