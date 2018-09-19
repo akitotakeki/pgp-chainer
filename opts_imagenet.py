@@ -7,6 +7,8 @@ import chainer.links as L
 from models_imagenet.resnet_fb import ResNet_fb
 from models_imagenet.resnet_fb_dconv import ResNet_fb_DConv
 from models_imagenet.resnet_fb_pgp import ResNet_fb_PGP
+from models_imagenet.shufflenetv2 import ShuffleNetV2
+
 
 model_dict = {
     'ResNet50_fb': lambda args: L.Classifier(ResNet_fb(50, args.nclasses)),
@@ -17,6 +19,8 @@ model_dict = {
     'ResNet101_fb_DConv': lambda args: L.Classifier(ResNet_fb_DConv(101, args.nclasses)),
     'ResNet101_fb_PGP': lambda args: FuseTrainWrapper(
         ResNet_fb_PGP(101, args.nclasses)),
+    'ShuffleNetV2_0.5x': lambda args: L.Classifier(ShuffleNetV2(50, args.nclasses, 0.5)),
+    'ShuffleNetV2': lambda args: L.Classifier(ShuffleNetV2(50, args.nclasses)),
 }
 
 
