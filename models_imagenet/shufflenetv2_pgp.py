@@ -145,7 +145,7 @@ class ShuffleNetV2_PGP(chainer.link.Chain):
 
         self.functions = collections.OrderedDict([
             ('conv1', [self.conv1, self.bn1, F.relu]),
-            ('expand1_1', [lambda x: pgp(x, 2)]),
+            ('expand1', [lambda x: pgp(x, 2)]),
             ('pool1', [lambda x: F.max_pooling_2d(x, ksize=3, stride=2)]),
             ('res2', [self.res2]),
             ('res3', [self.res3]),
@@ -191,4 +191,7 @@ class ShuffleNetV2_PGP(chainer.link.Chain):
     def extract(self, images, layers=['fc6']):
         self._layer_names = layers
         x = chainer.Variable(self.xp.asarray(images))
-        return chainer.cuda.to_cpu(self(x).data)
+        h = self(x).data
+        _len, _cls = h.shape
+        h = F.average(F.reshape(h, (256, _len // 256, _cls)), axis=0)
+        return chainer.cuda.to_cpu(h.data)
