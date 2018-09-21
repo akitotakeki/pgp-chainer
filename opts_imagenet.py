@@ -8,6 +8,7 @@ from models_imagenet.resnet_fb import ResNet_fb
 from models_imagenet.resnet_fb_dconv import ResNet_fb_DConv
 from models_imagenet.resnet_fb_pgp import ResNet_fb_PGP
 from models_imagenet.shufflenetv2 import ShuffleNetV2
+from models_imagenet.shufflenetv2_pgp import ShuffleNetV2_PGP
 
 
 model_dict = {
@@ -20,6 +21,8 @@ model_dict = {
     'ResNet101_fb_PGP': lambda args: FuseTrainWrapper(
         ResNet_fb_PGP(101, args.nclasses)),
     'ShuffleNetV2_0.5x': lambda args: L.Classifier(ShuffleNetV2(50, args.nclasses, 0.5)),
+    'ShuffleNetV2_0.5x_PGP': lambda args: FuseTrainWrapper(
+        ShuffleNetV2_PGP(50, args.nclasses, 0.5), n_kernel=256),
     'ShuffleNetV2': lambda args: L.Classifier(ShuffleNetV2(50, args.nclasses)),
 }
 

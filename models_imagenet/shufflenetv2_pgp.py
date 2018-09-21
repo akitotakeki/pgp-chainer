@@ -4,6 +4,7 @@ import chainer.links as L
 from chainer.initializers import normal
 import collections
 from .shuffle import shuffle
+from .pgp_lib import pgp
 
 
 class ShuffleNetV2Block(chainer.link.Chain):
@@ -19,7 +20,7 @@ class ShuffleNetV2Block(chainer.link.Chain):
                     nobias=True)
                 self.bn1 = L.BatchNormalization(in_channels)
                 self.conv2 = L.DepthwiseConvolution2D(
-                    in_channels, 1, 3, stride, 1,
+                    in_channels, 1, 3, 1, 1,
                     initialW=initialW, nobias=True)
                 self.bn2 = L.BatchNormalization(in_channels)
                 self.conv3 = L.Convolution2D(
@@ -27,7 +28,7 @@ class ShuffleNetV2Block(chainer.link.Chain):
                     nobias=True)
                 self.bn3 = L.BatchNormalization(out_channels // 2)
                 self.conv4 = L.DepthwiseConvolution2D(
-                    in_channels, 1, 3, stride, 1,
+                    in_channels, 1, 3, 1, 1,
                     initialW=initialW, nobias=True)
                 self.bn4 = L.BatchNormalization(in_channels)
                 self.conv5 = L.Convolution2D(
@@ -55,10 +56,10 @@ class ShuffleNetV2Block(chainer.link.Chain):
         if self.stride == 2:
             h1 = F.relu(self.bn1(self.conv1(x)))
             h1 = self.bn2(self.conv2(h1))
-            h1 = F.relu(self.bn3(self.conv3(h1)))
+            h1 = F.relu(self.bn3(self.conv3(pgp(h1, 2))))
 
             h2 = self.bn4(self.conv4(x))
-            h2 = F.relu(self.bn5(self.conv5(h2)))
+            h2 = F.relu(self.bn5(self.conv5(pgp(h2, 2))))
         elif self.stride == 1:
             h1, h2 = F.split_axis(x, (self.in_channels,), axis=1)
             h1 = F.relu(self.bn1(self.conv1(h1)))
@@ -96,7 +97,7 @@ class BuildingShuffleNetV2Block(chainer.link.Chain):
         return [getattr(self, name) for name in self._forward]
 
 
-class ShuffleNetV2(chainer.link.Chain):
+class ShuffleNetV2_PGP(chainer.link.Chain):
 
     def __init__(self, n_layers, n_out, net_scale=1.0, splits_left=2,
                  layer_names=None):
@@ -125,7 +126,7 @@ class ShuffleNetV2(chainer.link.Chain):
                                  net_scale))
 
         with self.init_scope():
-            self.conv1 = L.Convolution2D(3, out_channels[0], 3, 2, 1,
+            self.conv1 = L.Convolution2D(3, out_channels[0], 3, 1, 1,
                                          nobias=True, **kwargs)
             self.bn1 = L.BatchNormalization(out_channels[0])
             self.res2 = BuildingShuffleNetV2Block(block[0], out_channels[0],
@@ -144,6 +145,7 @@ class ShuffleNetV2(chainer.link.Chain):
 
         self.functions = collections.OrderedDict([
             ('conv1', [self.conv1, self.bn1, F.relu]),
+            ('expand1_1', [lambda x: pgp(x, 2)]),
             ('pool1', [lambda x: F.max_pooling_2d(x, ksize=3, stride=2)]),
             ('res2', [self.res2]),
             ('res3', [self.res3]),
