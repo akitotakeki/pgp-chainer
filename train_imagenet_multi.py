@@ -93,13 +93,10 @@ if __name__ == '__main__':
             img = np.array([img[0], img[1], img[2]])
         img /= 255
 
-        # img = random_sized_crop(img)
-        # img = T.resize(img, (224, 224), interpolation=PIL.Image.BICUBIC)
-        # img = color_jitter(img)
-        # img = T.pca_lighting(img, 0.1)
-
-        img = T.scale(img, 256, interpolation=PIL.Image.BICUBIC)
-        img = T.random_crop(img, (224, 224))
+        img = random_sized_crop(img)
+        img = T.resize(img, (224, 224), interpolation=PIL.Image.BICUBIC)
+        img = color_jitter(img)
+        img = T.pca_lighting(img, 0.1)
 
         img = (img - mean[:, None, None]) / std[:, None, None]
 
