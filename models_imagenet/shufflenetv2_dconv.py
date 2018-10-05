@@ -3,8 +3,8 @@ import chainer.functions as F
 import chainer.links as L
 from chainer.initializers import normal
 import collections
+from .pgp_lib import pgp, pgp_inv
 from .shuffle import shuffle
-from .pgp_lib import pgp
 
 
 class ShuffleNetV2Block(chainer.link.Chain):
@@ -56,10 +56,10 @@ class ShuffleNetV2Block(chainer.link.Chain):
         if self.stride == 2:
             h1 = F.relu(self.bn1(self.conv1(x)))
             h1 = self.bn2(self.conv2(h1))
-            h1 = F.relu(self.bn3(self.conv3(pgp(h1, 2))))
+            h1 = F.relu(self.bn3(self.conv3(h1)))
 
             h2 = self.bn4(self.conv4(x))
-            h2 = F.relu(self.bn5(self.conv5(pgp(h2, 2))))
+            h2 = F.relu(self.bn5(self.conv5(h2)))
         elif self.stride == 1:
             h1, h2 = F.split_axis(x, (self.in_channels,), axis=1)
             h1 = F.relu(self.bn1(self.conv1(h1)))
@@ -97,7 +97,7 @@ class BuildingShuffleNetV2Block(chainer.link.Chain):
         return [getattr(self, name) for name in self._forward]
 
 
-class ShuffleNetV2_PGP(chainer.link.Chain):
+class ShuffleNetV2_DConv(chainer.link.Chain):
 
     def __init__(self, n_layers, n_out, net_scale=1.0, splits_left=2,
                  layer_names=None):
@@ -146,10 +146,14 @@ class ShuffleNetV2_PGP(chainer.link.Chain):
         self.functions = collections.OrderedDict([
             ('conv1', [self.conv1, self.bn1, F.relu]),
             ('pool1', [lambda x: F.max_pooling_2d(x, ksize=3, stride=2)]),
+            ('expand2', [lambda x: pgp(x, 2)]),
             ('res2', [self.res2]),
+            ('expand3', [lambda x: pgp(x, 2)]),
             ('res3', [self.res3]),
+            ('expand4', [lambda x: pgp(x, 2)]),
             ('res4', [self.res4]),
             ('conv5', [self.conv5, self.bn5, F.relu]),
+            ('squeeze5', [lambda x: pgp_inv(x, 8)]),
             ('pool5', [lambda x: F.average(x, axis=(2, 3))]),
             ('fc6', [self.fc6]),
         ])
@@ -190,7 +194,4 @@ class ShuffleNetV2_PGP(chainer.link.Chain):
     def extract(self, images, layers=['fc6']):
         self._layer_names = layers
         x = chainer.Variable(self.xp.asarray(images))
-        h = self(x).data
-        _len, _cls = h.shape
-        h = F.average(F.reshape(h, (256, _len // 256, _cls)), axis=0)
-        return chainer.cuda.to_cpu(h.data)
+        return chainer.cuda.to_cpu(self(x).data)

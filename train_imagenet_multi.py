@@ -93,10 +93,13 @@ if __name__ == '__main__':
             img = np.array([img[0], img[1], img[2]])
         img /= 255
 
-        img = random_sized_crop(img)
-        img = T.resize(img, (224, 224), interpolation=PIL.Image.BICUBIC)
-        img = color_jitter(img)
-        img = T.pca_lighting(img, 0.1)
+        # img = random_sized_crop(img)
+        # img = T.resize(img, (224, 224), interpolation=PIL.Image.BICUBIC)
+        # img = color_jitter(img)
+        # img = T.pca_lighting(img, 0.1)
+
+        img = T.scale(img, 256, interpolation=PIL.Image.BICUBIC)
+        img = T.random_crop(img, (224, 224))
 
         img = (img - mean[:, None, None]) / std[:, None, None]
 
@@ -144,9 +147,9 @@ if __name__ == '__main__':
     train = chainermn.scatter_dataset(train, comm, shuffle=True)
     test = chainermn.scatter_dataset(test, comm)
 
-    train_iter = MultiprocessIterator(train, args.test_batchsize // comm.size, n_processes=4)
+    train_iter = MultiprocessIterator(train, args.batchsize // comm.size, n_processes=8)
     test_iter = MultiprocessIterator(test, args.test_batchsize // comm.size, repeat=False,
-                                     shuffle=False, n_processes=4)
+                                     shuffle=False, n_processes=8)
 
     updater = training.StandardUpdater(train_iter, optimizer, device=device)
     trainer = training.Trainer(updater, (args.epoch, 'epoch'),
